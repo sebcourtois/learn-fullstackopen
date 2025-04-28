@@ -1,21 +1,13 @@
 const Header = (props) => {
-    return (
-        <h1>{props.text}</h1>
-    )
+    return (<h1>{props.text}</h1>)
 }
 
 const Content = (props) => {
-    return (
-        <p>
-            {props.label} {props.value}
-        </p>
-    )
+    return (<p>{props.label} {props.value}</p>)
 }
 
 const Total = (props) => {
-    return (
-        <p>{props.label} {props.value}</p>
-    )
+    return (<p>{props.label} {props.value}</p>)
 }
 
 const App = () => {
@@ -27,15 +19,13 @@ const App = () => {
     const part3 = 'State of a component'
     const exercises3 = 14
 
-    return (
-        <div>
+    return (<div>
             <Header text={course}/>
             <Content label={part1} value={exercises1}/>
             <Content label={part2} value={exercises2}/>
             <Content label={part3} value={exercises3}/>
             <Total label="Number of exercises" value={exercises1 + exercises2 + exercises3}/>
-        </div>
-    )
+        </div>)
 }
 
 export default App
