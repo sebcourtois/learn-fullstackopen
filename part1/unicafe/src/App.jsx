@@ -1,7 +1,12 @@
 import {useState} from 'react'
 
 const StatsLine = ({text, value}) => {
-    return (<p>{text} {value}</p>)
+    return (
+        <tr>
+            <td>{text}</td>
+            <td>{value}</td>
+        </tr>
+    )
 }
 
 const Stats = ({good, neutral, bad}) => {
@@ -14,14 +19,16 @@ const Stats = ({good, neutral, bad}) => {
     const averageRate = (good - bad) / feedbackCount
     const positiveRate = good / feedbackCount * 100
     return (
-        <>
+        <table>
+            <tbody>
             <StatsLine text="good" value={good}/>
             <StatsLine text="neutral" value={neutral}/>
             <StatsLine text="bad" value={bad}/>
             <StatsLine text="all" value={feedbackCount}/>
             <StatsLine text="average" value={averageRate}/>
             <StatsLine text="positive" value={positiveRate.toString() + " %"}/>
-        </>
+            </tbody>
+        </table>
     )
 }
 
