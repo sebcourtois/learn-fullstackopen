@@ -11,30 +11,29 @@ const VotesDisplay = ({voteCount}) => {
     return (<p>Has {voteCount} votes</p>)
 }
 
-const AnecdoteView = ({index, text, voteCount, onVote}) => {
-    const [voteCountState, setVoteCountState] = useState(voteCount)
-
-    const handleVoteClick = () => {
-        onVote()
-        setVoteCountState(voteCountState + 1)
-    }
+const AnecdoteView = ({index, text, voteCount}) => {
     return (
         <>
             <p>{index} - {text}</p>
-            <VotesDisplay voteCount={voteCountState}/>
-            <button onClick={handleVoteClick}>Vote</button>
+            <VotesDisplay voteCount={voteCount}/>
         </>
     )
 }
 
 class Anecdote {
-    static counter = 0
+    static #counter = 0
+    #id = 0
 
     constructor(text) {
-        this.id = Anecdote.counter++
+        this.#id = Anecdote.#counter++
         this.text = text
-        this.voteCount = 3
+        this.voteCount = 0
     }
+
+    get id() {
+        return this.#id
+    }
+
 }
 
 const anecdotes = [
@@ -52,9 +51,17 @@ function pickRandomAnecdote() {
     return anecdotes[randomIndex(anecdotes.length - 1)]
 }
 
+function getPopularAnecdote(){
+    return anecdotes.reduce(
+        (prev,curr) => (curr.voteCount > prev.voteCount) ? curr : prev
+    )
+}
+
 const App = () => {
-    const [currentAnecdote, setCurrentAnecdote] = useState(anecdotes[0])
-    console.log(currentAnecdote)
+    const [currentAnecdote, setCurrentAnecdote] = useState(pickRandomAnecdote())
+    const [, setCurrentVoteCount] = useState(currentAnecdote.voteCount)
+    const [popularAnecdote, setPopularAnecdote] = useState(getPopularAnecdote())
+    // console.log(currentAnecdote)
 
     const handleNextAnecdoteClick = () => {
         let nextAnecdote = currentAnecdote
@@ -63,17 +70,28 @@ const App = () => {
         }
         setCurrentAnecdote(nextAnecdote)
     }
+    const handleVoteClick = () => {
+        currentAnecdote.voteCount++
+        setCurrentVoteCount(currentAnecdote.voteCount)
+        setPopularAnecdote(getPopularAnecdote())
+    }
 
     return (
         <div>
+            <h2>Anecdote of the day</h2>
             <AnecdoteView
-                key={currentAnecdote.id}
                 index={currentAnecdote.id + 1}
                 text={currentAnecdote.text}
                 voteCount={currentAnecdote.voteCount}
-                onVote={() => currentAnecdote.voteCount++}
             />
+            <button onClick={handleVoteClick}>Vote</button>
             <button onClick={handleNextAnecdoteClick}>Next Anecdote</button>
+            <h2>Most popular anecdote</h2>
+            <AnecdoteView
+                index={popularAnecdote.id + 1}
+                text={popularAnecdote.text}
+                voteCount={popularAnecdote.voteCount}
+            />
         </div>
     )
 }
