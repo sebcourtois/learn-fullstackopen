@@ -11,13 +11,30 @@ const VotesDisplay = ({voteCount}) => {
     return (<p>Has {voteCount} votes</p>)
 }
 
-const Anecdote = ({index, text, voteCount}) => {
+const AnecdoteView = ({index, text, voteCount, onVote}) => {
+    const [voteCountState, setVoteCountState] = useState(voteCount)
+
+    const handleVoteClick = () => {
+        onVote()
+        setVoteCountState(voteCountState + 1)
+    }
     return (
         <>
             <p>{index} - {text}</p>
-            <VotesDisplay voteCount={voteCount}/>
+            <VotesDisplay voteCount={voteCountState}/>
+            <button onClick={handleVoteClick}>Vote</button>
         </>
     )
+}
+
+class Anecdote {
+    static counter = 0
+
+    constructor(text) {
+        this.id = Anecdote.counter++
+        this.text = text
+        this.voteCount = 3
+    }
 }
 
 const anecdotes = [
@@ -29,29 +46,34 @@ const anecdotes = [
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.',
-]
-const voteCounters = Array(anecdotes.length).fill(0)
+].map((text) => new Anecdote(text))
+
+function pickRandomAnecdote() {
+    return anecdotes[randomIndex(anecdotes.length - 1)]
+}
 
 const App = () => {
-    const [selected, setSelected] = useState(0)
-    const [voteCount, setVoteCount] = useState(voteCounters[selected])
+    const [currentAnecdote, setCurrentAnecdote] = useState(anecdotes[0])
+    console.log(currentAnecdote)
 
-    voteCounters[selected] = voteCount
-
-    const pickRandomAnecdote = () => {
-        let newSelected = selected
-        while (newSelected === selected) {
-            newSelected = randomIndex(anecdotes.length - 1)
+    const handleNextAnecdoteClick = () => {
+        let nextAnecdote = currentAnecdote
+        while (nextAnecdote === currentAnecdote) {
+            nextAnecdote = pickRandomAnecdote()
         }
-        setSelected(newSelected)
-        setVoteCount(voteCounters[newSelected])
+        setCurrentAnecdote(nextAnecdote)
     }
 
     return (
         <div>
-            <Anecdote index={selected + 1} text={anecdotes[selected]} voteCount={voteCount}/>
-            <button onClick={() => setVoteCount(voteCount + 1)}>Vote</button>
-            <button onClick={pickRandomAnecdote}>Next Anecdote</button>
+            <AnecdoteView
+                key={currentAnecdote.id}
+                index={currentAnecdote.id + 1}
+                text={currentAnecdote.text}
+                voteCount={currentAnecdote.voteCount}
+                onVote={() => currentAnecdote.voteCount++}
+            />
+            <button onClick={handleNextAnecdoteClick}>Next Anecdote</button>
         </div>
     )
 }
