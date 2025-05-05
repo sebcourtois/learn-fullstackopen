@@ -13,9 +13,12 @@ const Part = ({title, exerciseCount}) => {
 const Content = ({parts}) => {
     return (
         <>
-            <Part title={parts[0].title} exerciseCount={parts[0].exerciseCount}/>
-            <Part title={parts[1].title} exerciseCount={parts[1].exerciseCount}/>
-            <Part title={parts[2].title} exerciseCount={parts[2].exerciseCount}/>
+            {parts.map((part) =>
+                <Part
+                    key={part.id}
+                    title={part.title}
+                    exerciseCount={part.exerciseCount}
+                />)}
         </>
     )
 }
