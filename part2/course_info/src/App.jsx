@@ -4,9 +4,9 @@ const Header = ({title}) => {
     )
 }
 
-const Part = ({title, exerciseCount}) => {
+const Part = ({title, exercises}) => {
     return (
-        <p>{title} {exerciseCount}</p>
+        <p>{title} {exercises}</p>
     )
 }
 
@@ -17,16 +17,14 @@ const Content = ({parts}) => {
                 <Part
                     key={part.id}
                     title={part.title}
-                    exerciseCount={part.exerciseCount}
+                    exercises={part.exercises}
                 />)}
         </>
     )
 }
 
 const Total = ({parts}) => {
-    const totalExercises = parts
-        .map((part) => part.exerciseCount)
-        .reduce((acc, curr) => acc + curr)
+    const totalExercises = parts.reduce((accum, part) => accum + part.exercises, 0)
     return <h4>Total of {totalExercises} exercises</h4>
 }
 
@@ -41,15 +39,57 @@ const Course = ({course}) => {
 }
 
 const App = () => {
-    const course = {
-        title: 'Half Stack application development',
-        parts: [
-            {id: 1, title: 'Fundamentals of React', exerciseCount: 10},
-            {id: 2, title: 'Using props to pass data', exerciseCount: 7},
-            {id: 3, title: 'State of a component', exerciseCount: 14},
-        ],
-    }
-    return <Course course={course}/>
+    const courses = [
+        {
+            title: 'Half Stack application development',
+            id: 1,
+            parts: [
+                {
+                    title: 'Fundamentals of React',
+                    exercises: 10,
+                    id: 1,
+                },
+                {
+                    title: 'Using props to pass data',
+                    exercises: 7,
+                    id: 2,
+                },
+                {
+                    title: 'State of a component',
+                    exercises: 14,
+                    id: 3,
+                },
+                {
+                    title: 'Redux',
+                    exercises: 11,
+                    id: 4,
+                },
+            ],
+        },
+        {
+            title: 'Node.js',
+            id: 2,
+            parts: [
+                {
+                    title: 'Routing',
+                    exercises: 3,
+                    id: 1,
+                },
+                {
+                    title: 'Middlewares',
+                    exercises: 7,
+                    id: 2,
+                },
+            ],
+        },
+    ]
+    return (
+        <>
+            {courses.map((course) =>
+                <Course key={course.id} course={course}/>
+            )}
+        </>
+    )
 }
 
 export default App
